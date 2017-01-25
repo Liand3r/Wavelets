@@ -2,7 +2,7 @@
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 %Lecture de l'image
-F = imread('lena512.bmp');
+F = imread('lena.bmp');
 G = imnoise(F, 'gaussian', 0, 0.001);
 imwrite(G, 'doublelena.bmp')
 %figure, imshow(F), 
