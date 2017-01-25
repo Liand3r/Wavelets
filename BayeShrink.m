@@ -3,9 +3,10 @@
 %   Detailed explanation goes here
 %Lecture de l'image
 F = imread('lena512.bmp');
-G = imnoise(F, 'gaussian', 0, 0.01);
+G = imnoise(F, 'gaussian', 0, 0.001);
 imwrite(G, 'doublelena.bmp')
-%figure, imshow(F), figure, imshow(G)
+%figure, imshow(F), 
+figure, imshow(G)
 
 G = double(G);
 [N,J] = dyadlength(G);
@@ -39,19 +40,16 @@ for i = 1:N/2
 end
 sig_est_Y2 = sig_est_Y2 * 4 / (N * N);
 %calcul de sig_est_X et du seuil T
-if (sig_est_Y2 > sig_est * sig_est):
+if (sig_est_Y2 > sig_est * sig_est)
     sigma_est_X = sqrt(sig_est_Y2 - sig_est * sig_est);
     T = sigma_est * sigma_est / sigma_est_X;
 else
     sigma_est_X = 0;
-    T = max(list);
+    T = max(l);
 end
 
 %Soft-treshold sur les coefficients
-
-
-
-
+Y = soft_thresh(Y,T);
 
 X = IWT2_PO(Y, L, qmf);
 X = uint8(X);
