@@ -2,8 +2,6 @@ function [ newY ] = BayesShrink( Y, L, sig_est )
 
 N= size(Y,1);
 %-------------------Treshold des coefficients
-%------Calcul du seuil T
-%Calcul de sig_est
 
 %Calcul et application du seuil pour chaque subband
 for i = 1:L

@@ -10,7 +10,7 @@ for i = 1:N
         
     end
 end
-sig_est_S2 = sig_est_S2 * 4 / (N * N)
+sig_est_S2 = sig_est_S2 * 4 / (N * N);
 
 %calcul de sig_est_X et du seuil T
 if (sig_est_S2 > sigma_est * sigma_est)

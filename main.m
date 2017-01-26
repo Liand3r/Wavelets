@@ -15,10 +15,11 @@ G = double(G);
 [N,J] = dyadlength(G);
 display(J)
 %Calcul des coefficients d'ondelette
-qmf = MakeONFilter('Daubechies',6) ;
+qmf = MakeONFilter('Daubechies',10) ;
 L=J-4;
 Y = FWT2_PO(G, L, qmf);
 %Débruitage
+sig_est = compute_sig_est(Y);
 Yb = BayesShrink(Y,L, sig_est);
 Yv = VisuShrink(Y, sig_est);
 
