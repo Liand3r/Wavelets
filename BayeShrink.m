@@ -10,46 +10,34 @@ figure, imshow(G)
 
 G = double(G);
 [N,J] = dyadlength(G);
+display(J)
 %Calcul des coefficients d'ondelette
-qmf = MakeONFilter('Daubechies',8) ;
+qmf = MakeONFilter('Daubechies',6) ;
 L=J-4;
 Y = FWT2_PO(G, L, qmf);
 
 %-------------------Treshold des coefficients
 %------Calcul du seuil T
 %Calcul de sig_est
-HH1 = zeros(N/2, N/2);
-l = zeros(N*N/4, 1)
+
+HH1 = Y((N/2)+1:N,(N/2)+1:N) ;
+l = zeros(N*N/4, 1);
 for i = 1:N/2
     for j = 1:N/2
-        HH1(i,j) = G(i+N/2, j+N/2);
-        c = abs(G(i+N/2, j+N/2));
-        l(j + (i-1)*N/2) = c;
-        
+        l(j + (i-1)*N/2) = abs(HH1(i,j));     
     end
 end
 l = sort(l);
-sig_est = median(l)/0.6475;
-%Calcul de sig_est_Y2
-sig_est_Y2 = 0
-for i = 1:N/2
-    for j = 1:N/2
-        sig_est_Y2 = sig_est_Y2 + HH1(i,j) * HH1(i,j);
-        
-    end
-end
-sig_est_Y2 = sig_est_Y2 * 4 / (N * N);
-%calcul de sig_est_X et du seuil T
-if (sig_est_Y2 > sig_est * sig_est)
-    sigma_est_X = sqrt(sig_est_Y2 - sig_est * sig_est);
-    T = sigma_est * sigma_est / sigma_est_X;
-else
-    sigma_est_X = 0;
-    T = max(l);
-end
-
-%Soft-treshold sur les coefficients
-Y = soft_thresh(Y,T);
+sig_est = median(l)/0.6475
+% for i = 1:L
+%     for j = 1:3
+%  SubBand = zeros(N/(2^i), N/(2^i)); 
+%  %Calcul de sig_est_Y2
+  T = compute_thresh(HH1, sig_est);
+%  %Soft-treshold sur les coefficients
+  Y((N/2)+1:N,(N/2)+1:N) = soft_thresh(HH1,T);
+%     end
+% end
 
 X = IWT2_PO(Y, L, qmf);
 X = uint8(X);
