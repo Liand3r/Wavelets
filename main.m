@@ -3,7 +3,8 @@
 %   Detailed explanation goes here
 %Lecture de l'image
 F = imread('lena512.bmp');
-G = imnoise(F, 'gaussian', 0, 0.015);
+X = double(F);
+G = imnoise(F, 'gaussian', 0, 0.01);
 imwrite(G, 'doublelena.bmp')
 
 figure;
@@ -14,7 +15,7 @@ G = double(G);
 [N,J] = dyadlength(G);
 display(J)
 %Calcul des coefficients d'ondelette
-qmf = MakeONFilter('Daubechies',10) ;
+qmf = MakeONFilter('Daubechies',6) ;
 L=J-4;
 Y = FWT2_PO(G, L, qmf);
 %Débruitage
@@ -23,11 +24,19 @@ Yv = VisuShrink(Y, sig_est);
 
 %Transformée inverse pour Bayes
 Xb = IWT2_PO(Yb, L, qmf);
-Xb = uint8(Xb);
+
 %Transformée inverse pour VisuShrink
 Xv = IWT2_PO(Yv, L, qmf);
-Xv = uint8(Xv);
 
+n = compute_MSE(X, G);
+b = compute_MSE(X, Xb);
+v = compute_MSE(X,Xv);
+display(n)
+display(b)
+display(v)
+
+Xv = uint8(Xv);
+Xb = uint8(Xb);
 %Affichage de Bayes
 figure ;
 title('Bayes')
