@@ -3,7 +3,7 @@
 %   Detailed explanation goes here
 %Lecture de l'image
 F = imread('lena512.bmp');
-G = imnoise(F, 'gaussian', 0, 0.001);
+G = imnoise(F, 'gaussian', 0, 0.01);
 imwrite(G, 'doublelena.bmp')
 %figure, imshow(F), 
 figure, imshow(G)
@@ -29,15 +29,26 @@ for i = 1:N/2
 end
 l = sort(l);
 sig_est = median(l)/0.6475
-% for i = 1:L
-%     for j = 1:3
-%  SubBand = zeros(N/(2^i), N/(2^i)); 
-%  %Calcul de sig_est_Y2
-  T = compute_thresh(HH1, sig_est);
-%  %Soft-treshold sur les coefficients
-  Y((N/2)+1:N,(N/2)+1:N) = soft_thresh(HH1,T);
-%     end
-% end
+%Calcul et application du seuil pour chaque subband
+for i = 1:L+1
+  N2i = N/ (2^i);
+  N2i1 = N/(2^(i-1));
+  %Traitement de HH_i
+  HH_i = Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) ;
+  T = compute_thresh(HH_i , sig_est);
+  HH_i = soft_thresh(HH_i,T);
+  Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) = HH_i;
+  % Traitement de LH_i
+  LH_i = Y( 1 : N2i , N2i + 1 : N2i1) ;
+  T = compute_thresh(LH_i , sig_est);
+  LH_i = soft_thresh(LH_i,T);
+   Y( 1 : N2i , N2i + 1 : N2i1) = LH_i ;
+  %Traitemetn de HL_i
+  HL_i = Y( N2i + 1 : N2i1 , 1:N2i) ;
+  T = compute_thresh(HL_i , sig_est);
+  HL_i = soft_thresh(HL_i,T);
+  Y( N2i + 1 : N2i1 , 1:N2i) = HL_i ;     
+ end
 
 X = IWT2_PO(Y, L, qmf);
 X = uint8(X);
