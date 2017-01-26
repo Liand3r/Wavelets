@@ -1,21 +1,6 @@
+function [ newY ] = BayesShrink( Y, L )
 
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
-%Lecture de l'image
-F = imread('lena512.bmp');
-G = imnoise(F, 'gaussian', 0, 0.01);
-imwrite(G, 'doublelena.bmp')
-%figure, imshow(F), 
-figure, imshow(G)
-
-G = double(G);
-[N,J] = dyadlength(G);
-display(J)
-%Calcul des coefficients d'ondelette
-qmf = MakeONFilter('Daubechies',6) ;
-L=J-4;
-Y = FWT2_PO(G, L, qmf);
-
+N= size(Y,1);
 %-------------------Treshold des coefficients
 %------Calcul du seuil T
 %Calcul de sig_est
@@ -30,7 +15,7 @@ end
 l = sort(l);
 sig_est = median(l)/0.6475
 %Calcul et application du seuil pour chaque subband
-for i = 1:L+1
+for i = 1:L
   N2i = N/ (2^i);
   N2i1 = N/(2^(i-1));
   %Traitement de HH_i
@@ -50,10 +35,6 @@ for i = 1:L+1
   Y( N2i + 1 : N2i1 , 1:N2i) = HL_i ;     
  end
 
-X = IWT2_PO(Y, L, qmf);
-X = uint8(X);
-figure, imshow(X)
-
-
-
+newY = Y;
+end
 
