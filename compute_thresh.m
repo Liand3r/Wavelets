@@ -3,6 +3,8 @@ function [ T ] = compute_thresh( S, sigma_est )
 %   Detailed explanation goes here
 N = size(S, 1);
 %Calcul de sig_est_Y2
+
+sig_est_Y2 = compute_sig_est_Y2(S);
 sig_est_S2 = 0;
 for i = 1:N
     for j = 1:N
