@@ -18,17 +18,14 @@ display(J)
 %Calcul des coefficients d'ondelette
 
 qmf = MakeONFilter('Daubechies',4) ;
-L=J-2;
+%Voir papier
 L = 4;
 
 Y = FWT2_PO(G, L, qmf);
 %Débruitage
 sig_est = compute_sig_est(Y);
 
-%Denoise + compression Bayeshrink
-%
+%Denoise + compression Bayeshrin
 [ X_hatQ] = BayesCompression( Y, L, sig_est )
-
-
 X_est = IWT2_PO(X_hatQ, L, qmf);
 %recherche de m et delta correct

@@ -8,13 +8,13 @@ m = 1;
 maxY = max(max(abs(Y)));
 
 
-while MDLQprec >= MDLQ && m<100
+while MDLQprec >= MDLQ && m<10
     delta_inf = maxY/m+5;
     delta_sup = maxY/(m-0.5);
-    h = (delta_sup - delta_inf)/30;
-    MDLQs = zeros(30,1);
+    h = (delta_sup - delta_inf)/5;
+    MDLQs = zeros(5,1);
     i = 1;
-    for i = 1:30
+    for i = 1:5
         MDLQs(i) = compute_MDLQ(Y, m, delta_inf + (i-1) * h, sig_est, T,bta, sig_X);
         
     end
@@ -23,7 +23,7 @@ while MDLQprec >= MDLQ && m<100
     
     m = m+1
     
-        
+    
 end
 
 if m  == 100
@@ -32,7 +32,7 @@ end
 %on a m, maintenant, on retrouve delta
 
 md = Inf;
-for j = 1:30
+for j = 1:5
     if MDLQs(j) < md
         i = j;
         md = MDLQs(j);

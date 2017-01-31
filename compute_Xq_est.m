@@ -14,7 +14,7 @@ for i = 1:m
     b = b + delta;
     bl = bl + delta;
 end
-
+%Quantization des coefficients
 for i = 1:n
     for j = 1:n
         if abs(Y(i,j)) < T
@@ -25,7 +25,7 @@ for i = 1:n
                 borne = (-1) * T;
                 while (Y(i,j) < borne) && (id > 1)
                     borne = borne - delta;
-                    id = id -1
+                    id = id -1;
                 end
                 Xq_est(i,j) = gammas(id);
                 

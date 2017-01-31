@@ -20,7 +20,7 @@ for i = 1:n
                 borne = (-1) * T;
                 while (X(i,j) < borne) && (id > 1)
                     borne = borne - delta;
-                    id = id -1
+                    id = id -1;
                 end
                 K(id) = K(id) +1;
                 
