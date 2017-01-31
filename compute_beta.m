@@ -3,12 +3,13 @@ function [ Beta] = compute_beta( Y, sig_est_Y2, sig_est )
 n = size(Y,1);
 
 %calcul de kappa
-kappa_est_Y = 0;
-for i = 1:n
-    for j = 1:n
-        kappa_est_Y = kappa_est_Y + Y(i,j)^4;
-    end
-end
+Y_pow = Y.^4;
+kappa_est_Y = sum(Y_pow(:));
+% for i = 1:n
+%     for j = 1:n
+%         kappa_est_Y = kappa_est_Y + Y(i,j)^4;
+%     end
+% end
 kappa_est_Y = kappa_est_Y / (sig_est_Y2^2 * n^2);
 %Estimation de beta
 syms cbeta

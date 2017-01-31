@@ -14,7 +14,9 @@ for i = 1:m
     b = b + delta;
     bl = bl + delta;
 end
+
 %Quantization des coefficients
+
 for i = 1:n
     for j = 1:n
         if abs(Y(i,j)) < T
