@@ -1,9 +1,7 @@
-function [ Xq_est ] = compute_Xq_est( Y, m, delta, T )
+function [ Xq_est ] = compute_Xq_est( Y, m, delta, T, bta, sigma_X )
 
 %calcul des niveaux
-% TODO URGENT / CALCULER CA PROPREMENT §§§§§
-beta = 10;
-sigma_X = 0.3;
+
 
 n = size(Y, 1);
 Xq_est = zeros(n, n);
@@ -11,7 +9,7 @@ gammas = zeros(2*m+1,1);
 b = T;
 bl = T + delta;
 for i = 1:m
-    gammas(i + m + 1) = compute_gamma_l(b, bl, sigma_X, beta);
+    gammas(i + m + 1) = compute_gamma_l(b, bl, sigma_X, bta);
     gammas(m + 1 - i) = (-1) * gammas(i + m + 1);
     b = b + delta;
     bl = bl + delta;

@@ -1,8 +1,9 @@
-function [ MDLQ ] = compute_MDLQ( Y, m, delta, sigma_est, T)
+function [ MDLQ ] = compute_MDLQ( Y, m, delta, sigma_est, T, bta, sigma_X)
 %Voir équation 31
 % il s'agit du truc à minimiser
 MDLQ = 0;
-Xq_est = compute_Xq_est(Y, m, delta, T);
+n = size(Y,1);
+Xq_est = compute_Xq_est( Y, m, delta, T, bta, sigma_X );
 for i = 1:n
     for j = 1:n
         MDLQ = (Y(i,j) - Xq_est(i,j))^2;

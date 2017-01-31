@@ -25,10 +25,10 @@ Y = FWT2_PO(G, L, qmf);
 %Débruitage
 sig_est = compute_sig_est(Y);
 
-%Threshold by BayesShrink
-Yt = BayesShrink(Y,L, sig_est);
+%Denoise + compression Bayeshrink
+%
+[ X_hatQ] = BayesCompression( Y, L, sig_est )
 
-[Xhat,m,delta] = BayesCompression(Yt, L, sig_est);
 
-X_est = IWT2_PO(Xhat, L, qmf);
+X_est = IWT2_PO(X_hatQ, L, qmf);
 %recherche de m et delta correct

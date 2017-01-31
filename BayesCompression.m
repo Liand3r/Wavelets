@@ -1,40 +1,55 @@
-function [Xhat,m,delta] = BayesCompression(Yt, L, sig_est)
-%UNTITLED8 Summary of this function goes here
-%   Detailed explanation goes here
 
-function [ newY ] = BayesShrink( Ycoeff, Yobs, L, sig_est )
+function [ newY ] = BayesCompression( Y, L, sig_est )
+
 
 N= size(Y,1);
-%-------------------Treshold des coefficients
 
-%Calcul et application du seuil pour chaque subband
+%pour chaque subband on : 
+%Calcule le seuil
+%estime sig_Y^2
+%caclule les constantes de la GGD
+% softthresh
+% on cherche m et delta qui minimise MDLQ sur la subband
+% On quantize la subband
+%faut que j'aille dormir.
 for i = 1:L
-  N2i = N/ (2^i);
-  N2i1 = N/(2^(i-1));
-  %Traitement de HH_i
-  HH_i = Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) ;
-  T = compute_thresh(HH_i , sig_est);
-  HH_i = soft_thresh(HH_i,T);
-  Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) = HH_i;
-  % Traitement de LH_i
-  LH_i = Y( 1 : N2i , N2i + 1 : N2i1) ;
-  T = compute_thresh(LH_i , sig_est);
-  LH_i = soft_thresh(LH_i,T);
-   Y( 1 : N2i , N2i + 1 : N2i1) = LH_i ;
-  %Traitemetn de HL_i
-  HL_i = Y( N2i + 1 : N2i1 , 1:N2i) ;
-  T = compute_thresh(HL_i , sig_est);
-  HL_i = soft_thresh(HL_i,T);
-  Y( N2i + 1 : N2i1 , 1:N2i) = HL_i ;     
- end
+    N2i = N/ (2^i);
+    N2i1 = N/(2^(i-1));
+    %Traitement de HH_i
+    HH_i = Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) ;
+    
+    T = compute_thresh(HH_i , sig_est);
+    sig_est_Y2 = compute_sig_est_Y2(HH_i);
+    bta = compute_beta(HH_i, sig_est_Y2, sig_est);    
+    HH_i = soft_thresh(HH_i,T);
+    sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
+    [m, delta] = minimizeMDLQ(HH_i,T, sig_est_Y2, sig_est, sig_X, bta);
+    HH_i = compute_Xq_est(HH_i, m, delta, T, bta, sig_X); 
+   
+    Y( N2i + 1 : N2i1 , N2i + 1 : N2i1) = HH_i;
+    % Traitement de LH_i
+    LH_i = Y( 1 : N2i , N2i + 1 : N2i1);
+    T = compute_thresh(LH_i , sig_est);
+    sig_est_Y2 = compute_sig_est_Y2(LH_i);
+    bta = compute_beta(LH_i, sig_est_Y2, sig_est);
+    LH_i = soft_thresh(LH_i,T);
+ sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
+    [m, delta] = minimizeMDLQ(LH_i,T, sig_est_Y2, sig_est, sig_X, bta);
+    LH_i = compute_Xq_est(LH_i, m, delta, T, bta, sig_X); 
+    Y( 1 : N2i , N2i + 1 : N2i1) = LH_i ;
+    %Traitemetn de HL_i
+    HL_i = Y( N2i + 1 : N2i1 , 1:N2i) ;
+    T = compute_thresh(HL_i , sig_est);
+    sig_est_Y2 = compute_sig_est_Y2(HL_i);
+    bta = compute_beta(HL_i, sig_est_Y2, sig_est);
+    HL_i = soft_thresh(HL_i,T);
+sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
+[m, delta] = minimizeMDLQ(HL_i,T, sig_est_Y2, sig_est, sig_X, bta);
+    HL_i = compute_Xq_est(HL_i, m, delta, T, bta, sig_X); 
+    Y( N2i + 1 : N2i1 , 1:N2i) = HL_i ;
+end
 
 newY = Y;
 end
 
-
-
-Xhat = 0;
-m = 0;
-delta = 0;
-end
 

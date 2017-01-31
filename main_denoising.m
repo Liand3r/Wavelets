@@ -24,7 +24,8 @@ L = 4;
 
 Y = FWT2_PO(G, L, qmf);
 %Débruitage
-sig_est = compute_sig_est(Y);
+HH1 = Y((N/2+1):N , (N/2 + 1):N);
+sig_est = compute_sig_est(HH1);
 %YbH = BayesShrinkHard(Y,L,sig_est);
 Yb = BayesShrink(Y,L, sig_est);
 Yv = VisuShrink(Y, sig_est);
@@ -44,7 +45,7 @@ b = compute_MSE(X, Xb);
 v = compute_MSE(X,Xv);
 display(n)
 display(b)
-display(bH)
+%display(bH)
 display(v)
 
 
@@ -57,7 +58,7 @@ imshow(Xv)
 figure;
 imshow(Xb)
 figure;
-imshow(XbH)
+%imshow(XbH)
 
 
 
