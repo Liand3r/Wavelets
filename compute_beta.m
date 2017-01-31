@@ -20,10 +20,5 @@ solx = solve(eqn, cbeta);
 
 Beta = solx;
 
-
-
-
-
-
 end
 

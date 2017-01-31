@@ -9,8 +9,8 @@ funden = @(x, sig, beta) (beta * sig * sqrt(gamma(3/beta)/gamma(1/beta)) / (2*ga
 funnum = @(x, sig, beta) x *(beta * sig * sqrt(gamma(3/beta)/gamma(1/beta)) / (2*gamma(1/beta)) )* exp( ( sig * sqrt(gamma(3/beta)/gamma(1/beta)) * abs(x))^beta);
 for i = 1:99
     X = X + h;
-    den = den + h * funden(X,sigma_x, beta);
-    num = num + h * (funnum(X,sigma_x, beta));
+    den = den + h * 0.5*(funden(X,sigma_x, beta) +funden(X-h,sigma_x, beta) );
+    num = num + h * (funnum(X,sigma_x, beta) + funnum(X-h, sigma_x, beta));
 end
 % display(num);
 % display(den);
