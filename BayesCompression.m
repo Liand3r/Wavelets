@@ -13,7 +13,7 @@ N= size(Y,1);
 %  On quantize la subband
 % faut que j'aille dormir.
 for i = 1:L
-    display(L);
+    display(i);
     N2i = N/ (2^i);
     N2i1 = N/(2^(i-1));
     %Traitement de HH_i
@@ -34,7 +34,7 @@ for i = 1:L
     T = compute_thresh(LH_i , sig_est);
     sig_est_Y2 = compute_sig_est_Y2(LH_i);
     bta = compute_beta(LH_i, sig_est_Y2, sig_est);
-    % LH_i = soft_thresh(LH_i,T);
+    LH_i = soft_thresh(LH_i,T);
     sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
     [m, delta] = minimizeMDLQ(LH_i,T, sig_est_Y2, sig_est, sig_X, bta);
     LH_i = compute_Xq_est(LH_i, m, delta, T, bta, sig_X); 
@@ -44,14 +44,25 @@ for i = 1:L
     HL_i = Y( N2i + 1 : N2i1 , 1:N2i) ;
     T = compute_thresh(HL_i , sig_est);
     sig_est_Y2 = compute_sig_est_Y2(HL_i);
-    sig_est_Y2 = 900;
     bta = compute_beta(HL_i, sig_est_Y2, sig_est);
-    % HL_i = soft_thresh(HL_i,T);
+    HL_i = soft_thresh(HL_i,T);
     sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
     [m, delta] = minimizeMDLQ(HL_i,T, sig_est_Y2, sig_est, sig_X, bta);
     HL_i = compute_Xq_est(HL_i, m, delta, T, bta, sig_X); 
     Y( N2i + 1 : N2i1 , 1:N2i) = HL_i ;
 end
+%quantization de LLj : 
+% T = 0;
+% LLj = Y(1:(N/2^L), 1:(N/2^L));
+% sig_est_Y2 = compute_sig_est_Y2(LLj);
+% bta = compute_beta(LLj, sig_est_Y2, sig_est);
+% sig_X = sqrt(max(sig_est_Y2 - sig_est * sig_est, 0));
+% [m, delta] = minimizeMDLQ(HL_i,0, sig_est_Y2, sig_est, sig_X, bta);
+% HL_i = compute_Xq_est(HL_i, m, delta, 0, bta, sig_X); 
+% Y( 1:(N/2^L), 1:(N/2^L)) = LLj ;
+
+
+
 
 newY = Y;
 end

@@ -9,8 +9,7 @@ X = X_est;
 for i = 1:n
     for j = 1:n
  
-        %normalement, ceux là valent 0 puisqu'ils ont déjà été thresholdés
-        %mais on sait jamais
+        %Correspond au threshold du débruitage simple
         if abs(X_est(i,j)) < T
             K(m+1) = K(m+1) + 1;
             

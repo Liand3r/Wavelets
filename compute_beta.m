@@ -5,11 +5,6 @@ n = size(Y,1);
 %calcul de kappa
 Y_pow = Y.^4;
 kappa_est_Y = sum(Y_pow(:));
-% for i = 1:n
-%     for j = 1:n
-%         kappa_est_Y = kappa_est_Y + Y(i,j)^4;
-%     end
-% end
 kappa_est_Y = kappa_est_Y / (sig_est_Y2^2 * n^2);
 %Estimation de beta
 syms cbeta

@@ -2,63 +2,60 @@
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 %Lecture de l'image
+close all;
+clear all;
 F = imread('lena512.bmp');
+%X : image originale, non bruitée
 X = double(F);
-G = imnoise(F, 'gaussian', 0, 0.0035);
-imwrite(G, 'doublelena.bmp')
+%On ajoute un bruit de moyenne/var constante 
+G = imnoise(F, 'gaussian', 0, 0.01);
 
+%on affiche l'image bruitée
 figure;
-title('Image bruitÃ©e')
+title('Image bruitée')
 imshow(G), 
 
 G = double(G);
-%[N,J] = dyadlength(G);
 N = size(G,1);
 J = log2(N);
-display(J)
+
 %Calcul des coefficients d'ondelette
-
-qmf = MakeONFilter('Daubechies',4) ;
-L=J-2;
+qmf = MakeONFilter('Daubechies',8) ;
 L = 4;
-
 Y = FWT2_PO(G, L, qmf);
+
 %DÃ©bruitage
+%Calcul de sig_est
 HH1 = Y((N/2+1):N , (N/2 + 1):N);
 sig_est = compute_sig_est(HH1);
-%YbH = BayesShrinkHard(Y,L,sig_est);
+
+%débruitage par bayeshrink et visushrink
 Yb = BayesShrink(Y,L, sig_est);
 Yv = VisuShrink(Y, sig_est);
 
 %TransformÃ©e inverse pour Baye
 Xb = IWT2_PO(Yb, L, qmf);
 
-%TransformÃ©e inverse pour Bayes HT
-%XbH = IWT2_PO(YbH, L, qmf);
-
 %TransformÃ©e inverse pour VisuShrink
 Xv = IWT2_PO(Yv, L, qmf);
 
 n = compute_MSE(X, G);
 b = compute_MSE(X, Xb);
-%bH = compute_MSE(X, XbH);
 v = compute_MSE(X,Xv);
+
 display(n)
 display(b)
-%display(bH)
 display(v)
 
 
 Xv = uint8(Xv);
 Xb = uint8(Xb);
-%XbH = uint8(XbH);
 
 figure;
 imshow(Xv)
 figure;
 imshow(Xb)
-figure;
-%imshow(XbH)
+
 
 
 
